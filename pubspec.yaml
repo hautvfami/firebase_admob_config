@@ -1,7 +1,8 @@
 name: firebase_admob_config
 description: Control google admob by firebase remote config
-version: 1.0.0+1
+version: 1.0.1+1
 homepage: https://github.com/hautvfami
+repository: https://github.com/hautvfami/firebase_admob_config
 
 environment:
   sdk: ">=2.16.2 <3.0.0"

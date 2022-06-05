@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:firebase_admob_config/models/models.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -10,6 +14,18 @@ class AppBannerAd extends StatefulWidget {
   factory AppBannerAd.fromJson(Map<String, dynamic>? json) {
     final _config = BannerConfig.fromJson(json ?? {});
     return AppBannerAd(config: _config);
+  }
+
+  factory AppBannerAd.fromKey({required String configKey}) {
+    try {
+      final data = FirebaseRemoteConfig.instance.getString(configKey);
+      final json = jsonDecode(data);
+      final config = BannerConfig.fromJson(json);
+      return AppBannerAd(config: config);
+    } catch (e, st) {
+      log('', name: 'AppBannerAd.fromKey', error: e, stackTrace: st);
+      return AppBannerAd(config: BannerConfig());
+    }
   }
 
   @override

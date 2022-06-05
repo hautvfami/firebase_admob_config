@@ -1,0 +1,19 @@
+{
+  "project_info": {
+    "project_number": "772931890041",
+    "firebase_url": "https://flutter-todo-9c2e0.firebaseio.com",
+    "project_id": "flutter-todo-9c2e0",
+    "storage_bucket": "flutter-todo-9c2e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772931890041:android:e07981816defbeaee95da8",
+        "android_client_info": {
+          "package_name": "com.example.example"
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

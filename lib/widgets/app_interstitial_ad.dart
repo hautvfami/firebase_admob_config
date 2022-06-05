@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_admob_config/models/models.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -17,6 +19,18 @@ class AppInterstitialAd {
     run();
   }
 
+  factory AppInterstitialAd.fromKey({required String keyConfig}) {
+    try {
+      final data = FirebaseRemoteConfig.instance.getString(keyConfig);
+      final json = jsonDecode(data);
+      final config = InterstitialConfig.fromJson(json);
+      return AppInterstitialAd.setup(config: config);
+    } catch (e, st) {
+      log('', name: 'AppInterstitialAd.fromKey', error: e, stackTrace: st);
+      return AppInterstitialAd.setup(config: InterstitialConfig());
+    }
+  }
+
   void _loadAd() {
     if (!config.enable || _failTimes == config.failTimeToStop || _isLoading) {
       return;
@@ -30,7 +44,7 @@ class AppInterstitialAd {
           _failTimes = 0;
           _isLoading = false;
           _interstitialAd = ad;
-          log('InterstitialAd success');
+          log('InterstitialAd success', name: 'AdMob');
         },
         onAdFailedToLoad: (LoadAdError error) {
           _failTimes++;
@@ -51,7 +65,7 @@ class AppInterstitialAd {
           doNext?.call();
         },
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          log('onAdDismissedFullScreenContent. $ad');
+          log('onAdDismissedFullScreenContent. $ad', name: 'AdMob');
           ad.dispose();
           _interstitialAd = null;
           _loadAd();
@@ -62,7 +76,10 @@ class AppInterstitialAd {
           ad.dispose();
           _interstitialAd = null;
         },
-        onAdImpression: (InterstitialAd ad) => log('impression occurred. $ad'),
+        onAdImpression: (InterstitialAd ad) => log(
+          'impression occurred. $ad',
+          name: 'AdMob',
+        ),
       );
       interstitialAd.show();
     } else {
@@ -72,7 +89,7 @@ class AppInterstitialAd {
 
   // show or load then call onNext
   void run([VoidCallback? doNext]) {
-    log('InterstitialAdHandler.run', stackTrace: StackTrace.current);
+    log('InterstitialAdHandler.run', name: 'AdMob');
     _requestedTimes++;
     if (_interstitialAd == null) {
       _loadAd();

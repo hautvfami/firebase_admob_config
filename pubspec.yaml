@@ -1,6 +1,6 @@
 name: firebase_admob_config
 description: Control google admob by firebase remote config. This package help you can config AdMob ads with Firebase Remote Config and A/B testing on them.
-version: 1.0.2
+version: 1.1.0
 homepage: https://github.com/hautvfami
 repository: https://github.com/hautvfami/firebase_admob_config
 

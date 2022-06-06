@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// Widget where is show BannerAd
 class AppBannerAd extends StatefulWidget {
   final BannerConfig config;
   final AdSize? size;
@@ -21,6 +22,10 @@ class AppBannerAd extends StatefulWidget {
     return AppBannerAd(config: _config, size: size);
   }
 
+  /// The BannerAd with config from Firebase Remote Config
+  /// [configKey] is key you save config on firebase
+  /// [size] is AdSize follow Google AdSize, if not provider [size], the widget
+  /// will get [size] from remote config
   factory AppBannerAd.fromKey({required String configKey, AdSize? size}) {
     try {
       final data = FirebaseRemoteConfig.instance.getString(configKey);

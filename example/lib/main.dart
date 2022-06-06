@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   //
   // Interstitial Ads from Firebase Remote Config
   final interstitialAd = AppInterstitialAd.fromKey(
-    keyConfig: 'interstitial_ad',
+    configKey: 'interstitial_ad',
   );
 
   @override

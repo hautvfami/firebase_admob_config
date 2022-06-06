@@ -59,21 +59,25 @@ like this
 
 Add your Ads widget to anywhere with a key you want integrate with:
 
-```flutter
+```dart
 //
 // Interstitial Ads from Firebase Remote Config
 final interstitialAd = AppInterstitialAd.fromKey(
- keyConfig: 'interstitial_ad',
+  keyConfig: 'interstitial_ad',
 );
-  
-// Banner Ads from Firebase Remote Config
-AppBannerAd.fromKey(configKey: 'banner_ad'),
 
-// InterstitialAd run
-TextButton(
+// Banner Ads from Firebase Remote Config
+Widget bannerAds() {
+  return AppBannerAd.fromKey(configKey: 'banner_ad');
+}
+
+// InterstitialAd show button
+Widget interstitialAd() {
+  return TextButton(
     onPressed: () => interstitialAd.run(),
     child: const Text('InterstitialAd'),
-),
+  );
+}
 ```
 
 <p align="center">

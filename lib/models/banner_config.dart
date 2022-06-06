@@ -5,8 +5,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'banner_config.g.dart';
 
-///
-///
+/**
+    example:
+    ```dart
+    key: "banner_ad"
+    value: {
+    "enable": true,
+    "ad_unit_id_android": "ca-app-pub-3940256099942544/6300978111",
+    "ad_unit_id_ios": "ca-app-pub-3940256099942544/2934735716",
+    "position": null,
+    "distance": null,
+    "width": 300,
+    "height": 250
+    }
+    ```
+ **/
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BannerConfig {
   @JsonKey(defaultValue: false)

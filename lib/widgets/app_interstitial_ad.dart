@@ -6,6 +6,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// Handler for InterstitialAd
+///
 class AppInterstitialAd {
   InterstitialAd? _interstitialAd;
   InterstitialConfig config;
@@ -19,9 +21,11 @@ class AppInterstitialAd {
     run(doNext);
   }
 
-  factory AppInterstitialAd.fromKey({required String keyConfig}) {
+  /// Setup InterstitialAd handle by key from firebase remote config
+  /// [configKey] is key of config you save in firebase remote config
+  factory AppInterstitialAd.fromKey({required String configKey}) {
     try {
-      final data = FirebaseRemoteConfig.instance.getString(keyConfig);
+      final data = FirebaseRemoteConfig.instance.getString(configKey);
       final json = jsonDecode(data);
       final config = InterstitialConfig.fromJson(json);
       return AppInterstitialAd.setup(config: config);
@@ -31,7 +35,7 @@ class AppInterstitialAd {
     }
   }
 
-  void loadAd() {
+  void _loadAd() {
     if (!config.enable || _failTimes == config.failTimeToStop || _isLoading) {
       return;
     }
@@ -56,6 +60,7 @@ class AppInterstitialAd {
     );
   }
 
+  /// Show full screen loaded ads
   void show({VoidCallback? doNext}) {
     if (_interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
@@ -67,7 +72,7 @@ class AppInterstitialAd {
           log('InterstitialAd.dismissed $ad', name: 'AdMob');
           ad.dispose();
           _interstitialAd = null;
-          loadAd();
+          _loadAd();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
           log('InterstitialAd.failedShow $ad', error: error, name: 'AdMob');
@@ -86,12 +91,12 @@ class AppInterstitialAd {
     }
   }
 
-  // show or load then call onNext
+  /// Load or show FullScreen ads then call onNext
   void run([VoidCallback? doNext]) {
     log('InterstitialAd.run', name: 'AdMob');
     _requestedTimes++;
     if (_interstitialAd == null) {
-      loadAd();
+      _loadAd();
       doNext?.call();
     } else if (_requestedTimes >= config.requestTimeToShow) {
       show(doNext: doNext);

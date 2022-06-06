@@ -1,6 +1,7 @@
 [![pub package](https://img.shields.io/pub/v/firebase_admob_config.svg)](https://pub.dev/packages/firebase_admob_config)
 [![pub package](https://img.shields.io/github/license/hautvfami/firebase_admob_config.svg?style=flat)](https://pub.dev/packages/firebase_admob_config)
 [![pub package](https://img.shields.io/badge/platform-flutter-blue.svg)](https://github.com/hautvfami/firebase_admob_config)
+
 Many flutter project earning with Google Admob and using firebase for analytics, This package help
 you can config AdMob ads with Firebase Remote Config and A/B testing on them
 

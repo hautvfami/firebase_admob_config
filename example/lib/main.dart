@@ -4,14 +4,24 @@ import 'package:firebase_admob_config/firebase_admob_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _setupFirebaseRemoteConfig();
+  await MobileAds.instance.initialize();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+
+  //
+  // Interstitial Ads from Firebase Remote Config
+  final interstitialAd = AppInterstitialAd.fromKey(
+    keyConfig: 'interstitial_ad',
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,15 +34,10 @@ class MyApp extends StatelessWidget {
               //
               // Banner Ads from Firebase Remote Config
               AppBannerAd.fromKey(configKey: 'banner_ad'),
-              //
-              // InterstitialAd from Firebase Remote Config
               TextButton(
-                onPressed: () => AppInterstitialAd.fromKey(
-                  keyConfig: 'interstitial_ad',
-                ),
-                child: const Text('InterstitialAd'),
+                child: const Text('Show InterstitialAd (2 taps)'),
+                onPressed: () => interstitialAd.run(),
               ),
-              //
             ],
           ),
         ),
@@ -52,6 +57,14 @@ Future<void> _setupFirebaseRemoteConfig() async {
   await remoteConfig.setDefaults(_defaultAdmobConfig);
 }
 
+/*
+Config width, height by following ads size
+ The standard banner (320x50) size.
+ The large banner (320x100) size.
+ The medium rectangle (300x250) size.
+ The full banner (468x60) size.
+ The leaderboard (728x90) size.
+*/
 final Map<String, dynamic> _defaultAdmobConfig = {
   'banner_ad': jsonEncode({
     "enable": true,
@@ -59,16 +72,15 @@ final Map<String, dynamic> _defaultAdmobConfig = {
     "ad_unit_id_ios": "ca-app-pub-3940256099942544/2934735716",
     "position": null,
     "distance": null,
-    "width": null,
-    "height": null
+    "width": 300,
+    "height": 250
   }),
   'interstitial_ad': jsonEncode({
     "enable": true,
     "ad_unit_id_android": "ca-app-pub-3940256099942544/1033173712",
     "ad_unit_id_ios": "ca-app-pub-3940256099942544/4411468910",
-    "position": null,
-    "distance": null,
-    "width": null,
-    "height": null
+    "request_time_to_show": 3,
+    "fail_time_to_stop": 3,
+    "init_request_time": 0
   })
 };

@@ -14,9 +14,9 @@ class AppInterstitialAd {
   int _requestedTimes = 0;
   bool _isLoading = false;
 
-  AppInterstitialAd.setup({required this.config}) {
+  AppInterstitialAd.setup({required this.config, VoidCallback? doNext}) {
     _requestedTimes = config.initRequestTime;
-    run();
+    run(doNext);
   }
 
   factory AppInterstitialAd.fromKey({required String keyConfig}) {
@@ -31,7 +31,7 @@ class AppInterstitialAd {
     }
   }
 
-  void _loadAd() {
+  void loadAd() {
     if (!config.enable || _failTimes == config.failTimeToStop || _isLoading) {
       return;
     }
@@ -44,7 +44,7 @@ class AppInterstitialAd {
           _failTimes = 0;
           _isLoading = false;
           _interstitialAd = ad;
-          log('InterstitialAd success', name: 'AdMob');
+          log('InterstitialAd loaded', name: 'AdMob');
         },
         onAdFailedToLoad: (LoadAdError error) {
           _failTimes++;
@@ -56,32 +56,31 @@ class AppInterstitialAd {
     );
   }
 
-  void _show({VoidCallback? doNext}) {
-    final interstitialAd = _interstitialAd;
-    if (interstitialAd != null) {
-      interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+  void show({VoidCallback? doNext}) {
+    if (_interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (InterstitialAd ad) {
           _requestedTimes = 0;
           doNext?.call();
         },
         onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          log('onAdDismissedFullScreenContent. $ad', name: 'AdMob');
+          log('InterstitialAd.dismissed $ad', name: 'AdMob');
           ad.dispose();
           _interstitialAd = null;
-          _loadAd();
+          loadAd();
         },
         onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-          log('onAdFailedToShowFullScreenContent: $ad', error: error);
+          log('InterstitialAd.failedShow $ad', error: error, name: 'AdMob');
           doNext?.call();
           ad.dispose();
           _interstitialAd = null;
         },
-        onAdImpression: (InterstitialAd ad) => log(
-          'impression occurred. $ad',
+        onAdImpression: (ad) => log(
+          'InterstitialAd.impression $ad',
           name: 'AdMob',
         ),
       );
-      interstitialAd.show();
+      _interstitialAd!.show();
     } else {
       doNext?.call();
     }
@@ -89,13 +88,13 @@ class AppInterstitialAd {
 
   // show or load then call onNext
   void run([VoidCallback? doNext]) {
-    log('InterstitialAdHandler.run', name: 'AdMob');
+    log('InterstitialAd.run', name: 'AdMob');
     _requestedTimes++;
     if (_interstitialAd == null) {
-      _loadAd();
+      loadAd();
       doNext?.call();
     } else if (_requestedTimes >= config.requestTimeToShow) {
-      _show(doNext: doNext);
+      show(doNext: doNext);
     } else {
       doNext?.call();
     }

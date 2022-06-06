@@ -25,16 +25,30 @@ Setup firebase remote config with a key you want to using like this:
 1. Your config key: `banner_ad`
 2. Your config data:
 
-```
+```json
 {
-    "enable": true,
-    "ad_unit_id_android": "ca-app-pub-3940256099942544/6300978111",
-    "ad_unit_id_ios": "ca-app-pub-3940256099942544/2934735716",
-    "position": null,
-    "distance": null,
-    "width": null,
-    "height": null
-  }
+  "enable": true,
+  "ad_unit_id_android": "ca-app-pub-3940256099942544/6300978111",
+  "ad_unit_id_ios": "ca-app-pub-3940256099942544/2934735716",
+  "position": null,
+  "distance": null,
+  "width": null,
+  "height": null
+}
+```
+
+1. Your config key: `interstitial_ad`
+2. Your config data:
+
+```json
+{
+  "enable": true,
+  "ad_unit_id_android": "ca-app-pub-3940256099942544/1033173712",
+  "ad_unit_id_ios": "ca-app-pub-3940256099942544/4411468910",
+  "request_time_to_show": 10,
+  "fail_time_to_stop": 3,
+  "init_request_time": 0
+}
 ```
 
 like this
@@ -46,12 +60,18 @@ like this
 Add your Ads widget to anywhere with a key you want integrate with:
 
 ```flutter
+//
+// Interstitial Ads from Firebase Remote Config
+final interstitialAd = AppInterstitialAd.fromKey(
+ keyConfig: 'interstitial_ad',
+);
+  
 // Banner Ads from Firebase Remote Config
 AppBannerAd.fromKey(configKey: 'banner_ad'),
 
-// InterstitialAd from Firebase Remote Config
+// InterstitialAd run
 TextButton(
-    onPressed: () => AppInterstitialAd.fromKey(keyConfig: 'interstitial_ad'),
+    onPressed: () => interstitialAd.run(),
     child: const Text('InterstitialAd'),
 ),
 ```

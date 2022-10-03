@@ -12,6 +12,11 @@ dependencies:
   firebase_admob_config:
     path: ../../firebase_admob_config
 
+  json_annotation: ^4.7.0
+  google_mobile_ads: ^2.0.1
+  firebase_remote_config: ^2.0.19
+  firebase_core: ^1.24.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

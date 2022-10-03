@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:firebase_admob_config/firebase_admob_config.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,16 @@ class MyApp extends StatelessWidget {
     configKey: 'interstitial_ad',
   );
 
+  // Rewarded Ads from Firebase Remote Config
+  final rewardedAd = AppRewardedAd.fromKey(
+    configKey: 'rewarded_ad',
+  );
+
+  // Rewarded Interstitial Ads from Firebase Remote Config
+  final rewardedInterstitialAd = AppRewardedInterstitialAd.fromKey(
+    configKey: 'rewarded_interstitial_ad',
+  );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,8 +46,23 @@ class MyApp extends StatelessWidget {
               // Banner Ads from Firebase Remote Config
               AppBannerAd.fromKey(configKey: 'banner_ad'),
               TextButton(
-                child: const Text('Show InterstitialAd (2 taps)'),
+                child: const Text('Show InterstitialAd'),
                 onPressed: () => interstitialAd.run(),
+              ),
+              TextButton(
+                child: const Text('Show RewardedAd'),
+                onPressed: () => rewardedAd.show(onUserEarnedReward: (ad, rw) {
+                  log('$ad ${rw.type} ${rw.amount}', name: 'MyApp.RewardedAd');
+                }),
+              ),
+              TextButton(
+                child: const Text('Show RewardedInterstitialAd'),
+                onPressed: () => rewardedInterstitialAd.show(
+                  onUserEarnedReward: (ad, rw) {
+                    log('$ad ${rw.type} ${rw.amount}',
+                        name: 'RewardedInterstitial');
+                  },
+                ),
               ),
             ],
           ),
@@ -82,5 +108,15 @@ final Map<String, dynamic> _defaultAdmobConfig = {
     "request_time_to_show": 3,
     "fail_time_to_stop": 3,
     "init_request_time": 0
+  }),
+  'rewarded_ad': jsonEncode({
+    "enable": true,
+    "ad_unit_id_android": "ca-app-pub-3940256099942544/5224354917",
+    "ad_unit_id_ios": "ca-app-pub-3940256099942544/1712485313",
+  }),
+  'rewarded_interstitial_ad': jsonEncode({
+    "enable": true,
+    "ad_unit_id_android": "ca-app-pub-3940256099942544/5354046379",
+    "ad_unit_id_ios": "ca-app-pub-3940256099942544/6978759866",
   })
 };

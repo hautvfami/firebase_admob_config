@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:firebase_admob_config/models/base_config.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'interstitial_config.g.dart';
@@ -19,13 +18,7 @@ part 'interstitial_config.g.dart';
     ```
  **/
 @JsonSerializable(fieldRename: FieldRename.snake)
-class InterstitialConfig {
-  @JsonKey(defaultValue: false)
-  final bool enable;
-  @JsonKey(defaultValue: '')
-  final String adUnitIdAndroid;
-  @JsonKey(defaultValue: '')
-  final String adUnitIdIos;
+class InterstitialConfig extends BaseConfig {
   @JsonKey(defaultValue: 10)
   final int requestTimeToShow;
   @JsonKey(defaultValue: 3)
@@ -34,15 +27,17 @@ class InterstitialConfig {
   final int initRequestTime;
 
   InterstitialConfig({
-    this.enable = false,
-    this.adUnitIdAndroid = '',
-    this.adUnitIdIos = '',
+    bool enable = false,
+    String adUnitIdAndroid = '',
+    String adUnitIdIos = '',
     this.requestTimeToShow = 10,
     this.failTimeToStop = 3,
     this.initRequestTime = 0,
-  });
-
-  String get adUnitId => Platform.isAndroid ? adUnitIdAndroid : adUnitIdIos;
+  }) : super(
+          enable: enable,
+          adUnitIdAndroid: adUnitIdAndroid,
+          adUnitIdIos: adUnitIdIos,
+        );
 
   factory InterstitialConfig.fromJson(Map<String, dynamic> json) =>
       _$InterstitialConfigFromJson(json);

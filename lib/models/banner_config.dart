@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:firebase_admob_config/models/base_config.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -21,13 +20,7 @@ part 'banner_config.g.dart';
     ```
  **/
 @JsonSerializable(fieldRename: FieldRename.snake)
-class BannerConfig {
-  @JsonKey(defaultValue: false)
-  final bool enable;
-  @JsonKey(defaultValue: '')
-  final String adUnitIdAndroid;
-  @JsonKey(defaultValue: '')
-  final String adUnitIdIos;
+class BannerConfig extends BaseConfig {
   @JsonKey(defaultValue: 0)
   final int position;
   final int? distance;
@@ -35,20 +28,22 @@ class BannerConfig {
   final int? height;
 
   BannerConfig({
-    this.enable = false,
-    this.adUnitIdAndroid = '',
-    this.adUnitIdIos = '',
+    bool enable = false,
+    String adUnitIdAndroid = '',
+    String adUnitIdIos = '',
     this.position = 0,
     this.distance,
     this.width,
     this.height,
-  });
+  }) : super(
+          enable: enable,
+          adUnitIdAndroid: adUnitIdAndroid,
+          adUnitIdIos: adUnitIdIos,
+        );
 
   AdSize get adSize => width == null || height == null
       ? AdSize.fullBanner
       : AdSize(width: width!, height: height!);
-
-  String? get adUnitId => Platform.isAndroid ? adUnitIdAndroid : adUnitIdIos;
 
   factory BannerConfig.fromJson(Map<String, dynamic> json) =>
       _$BannerConfigFromJson(json);

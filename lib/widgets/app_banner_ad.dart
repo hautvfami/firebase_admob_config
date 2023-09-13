@@ -49,17 +49,22 @@ class _AppBannerAdState extends State<AppBannerAd> {
   AdSize get size => widget.size ?? widget.config.adSize;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     if (widget.config.enable) {
+      dynamic dSize =
+          await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.truncate(),
+      );
+
+      dSize ??= size;
+
       bannerAd = BannerAd(
         adUnitId: widget.config.adUnitId ?? '',
-        size: size,
+        size: dSize,
         request: const AdRequest(),
         listener: BannerAdListener(
-          onAdLoaded: (_) => setState(() {
-            adLoaded = true;
-          }),
+          onAdLoaded: (_) => setState(() => adLoaded = true),
           onAdFailedToLoad: (_, error) => _.dispose(),
         ),
       )..load();
